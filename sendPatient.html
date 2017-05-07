@@ -1,0 +1,254 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1"> -->
+		
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+		
+		<link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+		
+		<title> Briz Report </title>
+	</head>
+	
+	<body style="background-color: #EEE;">
+	
+		<!-- Navbar -->
+		<nav class="navbar navbar-inverse navbar-fixed-top" id="my-navbar">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+				</div><!-- Navbar Header -->
+				<div class="collapse navbar-collapse" id="navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="report.html" rel="external">Добави пациент</a>
+						<li><a href="editPatient.html">Справка за пациент</a>
+						<li><a href="sendPatient.html">Изпрати писмо</a>
+						<li><a href="exportPatient.html">Експорт на пациент</a>
+					</ul>
+				</div>
+			</div><!-- End Container -->
+		</nav><!-- End navbar -->
+	
+		<!-- jumbotron -->
+		<div class="jumbotron">
+			<div class="container text-center">
+				<!-- Testing -->
+				<section id="main-content">
+				<div id="guts">
+					<h1 style="margin-top:0.6em; margin-bottom:0.6em;">Изпрати писмо</h1>
+					<div class="col-lg-8" style="width:100%; height:100%">
+						<form action="database/send.php" method="post" name="Edit Patient" class="form-horizontal" id="editForm" target="myIframe2"> <!-- target, method none -->
+							
+							<div class="form-group">
+								<label for="user-personId" class="col-lg-2 control-label">ЕГН</label>
+								<div class="col-md-8">
+									<input type="text" class="form-control" name="patientId" id="user-patientId" placeholder="Въведете ЕГН" pattern="\d{1,10}" maxlength="10">
+								</div>
+							</div> <!-- End form group -->
+		
+							<div class="form-group">
+								<label for="user-date" class="col-lg-2 control-label">От дата</label>
+								<div class="col-lg-10">
+					
+									<div class="input-group date form_date col-md-5" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+										<input class="form-control" name="datePatient2" id="datePatient2" size="16" type="text" value="" readonly>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-calendar" onclick="openCalendar()"></span></span>
+									</div>
+									<input type="hidden" id="dtp_input2" value="" /><br/>
+            
+								</div>
+							</div> <!-- End form group -->
+							
+							<div class="form-group">
+								<label for="user-date" class="col-lg-2 control-label">До дата</label>
+								<div class="col-lg-10">
+					
+									<div class="input-group date form_date col-md-5" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+										<input class="form-control" name="datePatient3" id="datePatient3" size="16" type="text" value="" readonly>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-calendar" onclick="openCalendar()"></span></span>
+									</div>
+									<input type="hidden" id="dtp_input2" value="" /><br/>
+            
+								</div>
+							</div> <!-- End form group -->
+							
+							<div class="form-group">
+								<div class="btn-margin" style="margin-top:1.5em;">
+									<button type="submit" value="Submit" class="btn btn-primary btn-lg" id="subButton" onclick="formSearch()">Търси</button> <!-- Submit value -->
+									<button class="btn btn-success btn-lg" style="margin-left:3em;" id="sendAllButton" onclick="sendAllEmails()" disabled>Изпрати до всички</button>
+								</div>
+							</div> <!-- End form group -->
+							
+							<!-- Success message -->
+								<div id="successMessage2" style="display:none">
+										<div class="alert alert-success fade in">
+											<a href="#" class="close" data-dismiss="alert">&times;</a>
+											<strong>Успех!</strong> Съобщението е изпратено успешно.
+										</div>
+								</div> <!-- End Success message -->
+								
+							<!-- Results label -->
+							<div id="lableResId" style="display:none">
+								<h4 align="center">Резултати от търсенето</h4>
+							</div>
+							
+							<!-- Display results -->
+							<div id="disp_data"></div>
+							
+							<!-- iframe dummy -->
+							<iframe name="myIframe2" width=0 height=0 style="hidden" frameborder=0 marginheight=0 marginwidth=0 scrolling=no>
+								<!-- Empty -->
+							</iframe>
+									
+						</form>
+					</div>
+				</div>
+				</section> <!-- End test -->
+			</div>
+		</div> <!-- End jumbotron -->
+	
+	
+		<!-- Load jquery library -->
+		<script type="text/javascript" src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<!-- DateTime picker library -->
+		<script type="text/javascript" src="js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/bootstrap-datetimepicker.bg.js" charset="UTF-8"></script>
+		<!-- Special script for date-time -->
+		<script type="text/javascript">
+			function openCalendar() {
+				$('.form_date').datetimepicker({
+					language: 'bg',
+					format: 'dd-mm-yyyy',
+					weekStart: 1,
+					todayBtn:  1,
+					autoclose: 1,
+					todayHighlight: 1,
+					startView: 2,
+					minView: 2,
+					forceParse: 0
+				});
+			}
+		</script>
+		<!-- Script for form search and different send functions -->
+		<script type="text/javascript">
+			function formSearch() {
+				
+				document.getElementById("sendAllButton").disabled = false;
+				document.getElementById("successMessage2").style.display = "none";
+			
+				var parientId = document.getElementById("user-patientId").value;
+				var datePatient2 = document.getElementById("datePatient2").value;
+				var datePatient3 = document.getElementById("datePatient3").value;
+				
+				if ((!parientId.trim()) && (!datePatient2.trim()) && (!datePatient3.trim())) {
+					
+					document.getElementById("lableResId").style.display = "block";
+					var xmlhttp = new XMLHttpRequest();
+					xmlhttp.open("GET","database/send.php?status=disp", false);
+					xmlhttp.send(null);
+					document.getElementById("disp_data").innerHTML = xmlhttp.responseText;
+				
+				} else if ((parientId.trim()) && (!datePatient2.trim()) && (!datePatient3.trim())) {
+					
+					document.getElementById("lableResId").style.display = "block";
+					var xmlhttp = new XMLHttpRequest();
+					xmlhttp.open("GET","database/send.php?status=disp" + "&patientId=" + document.getElementById("user-patientId").value, false);
+					xmlhttp.send(null);
+					document.getElementById("disp_data").innerHTML = xmlhttp.responseText;
+				
+				} else if ((parientId.trim()) && (datePatient2.trim()) && (!datePatient3.trim())) {
+					
+					document.getElementById("lableResId").style.display = "block";
+					var xmlhttp = new XMLHttpRequest();
+					xmlhttp.open("GET","database/send.php?status=disp" + "&patientId=" + document.getElementById("user-patientId").value + "&datePatient2=" + document.getElementById("datePatient2").value, false);
+					xmlhttp.send(null);
+					document.getElementById("disp_data").innerHTML = xmlhttp.responseText;
+				
+				} else if ((parientId.trim()) && (datePatient2.trim()) && (datePatient3.trim())) {
+				
+					document.getElementById("lableResId").style.display = "block";
+					var xmlhttp = new XMLHttpRequest();
+					xmlhttp.open("GET","database/send.php?status=disp" + "&patientId=" + document.getElementById("user-patientId").value + "&datePatient2=" + document.getElementById("datePatient2").value + "&datePatient3=" + document.getElementById("datePatient3").value, false);
+					xmlhttp.send(null);
+					document.getElementById("disp_data").innerHTML = xmlhttp.responseText;
+					
+				} else if ((!parientId.trim()) && (datePatient2.trim()) && (datePatient3.trim())) {
+				
+					document.getElementById("lableResId").style.display = "block";
+					var xmlhttp = new XMLHttpRequest();
+					xmlhttp.open("GET","database/send.php?status=disp" + "&datePatient2=" + document.getElementById("datePatient2").value + "&datePatient3=" + document.getElementById("datePatient3").value, false);
+					xmlhttp.send(null);
+					document.getElementById("disp_data").innerHTML = xmlhttp.responseText;
+				
+				} else if ((!parientId.trim()) && (datePatient2.trim()) && !(datePatient3.trim())) {
+				
+					document.getElementById("lableResId").style.display = "block";
+					var xmlhttp = new XMLHttpRequest();
+					xmlhttp.open("GET","database/send.php?status=disp" + "&datePatient3=" + document.getElementById("datePatient3").value, false);
+					xmlhttp.send(null);
+					document.getElementById("disp_data").innerHTML = xmlhttp.responseText;
+				}
+					
+			}
+			
+			function sentFunc(id) {
+			
+				firstName = document.getElementById("name" + id).innerHTML;
+				secondName = document.getElementById("secondName" + id).innerHTML;
+				lastName = document.getElementById("lastName" + id).innerHTML;
+				patientId = document.getElementById("patientId" + id).innerHTML;
+				department = document.getElementById("department" + id).innerHTML;
+				exception = document.getElementById("exception" + id).innerHTML;
+				date = document.getElementById("date" + id).innerHTML;
+				sendId = document.getElementById("sent" + id).innerHTML;
+				
+				if (sendId != 'ДА') {
+					sent_value(id, firstName, secondName, lastName, patientId, department, exception, date);
+					console.log("mail send!!!");
+					document.getElementById("successMessage2").style.display = "block";
+					document.getElementById(id).disabled = true;
+				} else {
+					console.log("mail NOTsend!!!");
+				}
+				
+			}
+			
+			function sent_value(id, firstName, secondName, lastName, patientId, department, exception, date) {
+				
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.open("GET","database/send.php?id=" + id + "&firstName=" + firstName + "&secondName=" + secondName + "&lastName=" + lastName + "&patientId=" + patientId
+							+ "&department=" + department + "&exception=" + exception + "&date=" + date + "&status=sent", false);
+				xmlhttp.send(null);
+				
+			}
+			
+			function sendAllEmails() {
+				
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.open("GET","database/send.php?status=sentAll", false);
+				xmlhttp.send(null);
+				
+				document.getElementById("sendAllButton").disabled = true;
+				document.getElementById("successMessage2").style.display = "block";
+				
+				
+			}
+			
+		</script>
+		
+	</body>
+</html>
